@@ -17,9 +17,11 @@ def map_to_guitar_tab(chord_sequence):
     guitar_staff.insert(0, instrument.AcousticGuitar())
 
     # Iterate through the chords
-    for ch in chord_sequence:
+    for ch_index, ch in enumerate(chord_sequence, start=1):
         # Ensure that the object is a Chord
         if isinstance(ch, chord.Chord):
+            logging.info(f'Processing chord {ch_index} with notes: {ch.notes}')
+
             for n in ch.notes:
                 # Convert each note to guitar tablature
                 # Convert the note name to sharp notation if it is in flat notation
@@ -29,8 +31,10 @@ def map_to_guitar_tab(chord_sequence):
 
                 # Convert the note to guitar tablature
                 note_name_with_octave = note_name + str(n.octave)
-                # Use the new function note_name_to_guitar_tab
                 tab_positions = note_name_to_guitar_tab(note_name_with_octave)
+
+                logging.info(
+                    f'Tab positions for note {note_name_with_octave}: {tab_positions}')
 
                 # For each tab position, create a TablatureNote and add it to the guitar_staff
                 for string, fret in tab_positions:
@@ -44,6 +48,9 @@ def map_to_guitar_tab(chord_sequence):
 
                     # Add the TablatureNote to the guitar_staff
                     guitar_staff.append(tab_note)
+
+    # Log the size of the guitar_staff stream
+    logging.info(f'Guitar staff size: {len(guitar_staff)}')
 
     # Returning the complete staff
     return guitar_staff
